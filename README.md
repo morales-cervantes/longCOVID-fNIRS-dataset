@@ -2,7 +2,7 @@
 
 **This repository supports the scientific article:**
 
-##Exploring New Horizons: fNIRS and Machine Learning in Understanding postCOVID-19*
+## Exploring New Horizons: fNIRS and Machine Learning in Understanding postCOVID-19
 
 
 **Antony Morales-Cervantes** [![ORCID](https://img.shields.io/badge/ORCID-0000--0003--3669--2638-green)](https://orcid.org/0000-0003-3669-2638)  
