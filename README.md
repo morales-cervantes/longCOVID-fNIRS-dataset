@@ -18,32 +18,34 @@ This repository contains the **expanded version** of the functional Near-Infrare
 ## Contents
 
 - `Long_COVID_fNIRS_Raw_Data/`: Raw fNIRS recordings (.tsv) from 37 participants (9 post-COVID, 28 controls).
-- `data_processing/`: Python scripts for preprocessing, feature extraction, dimensionality reduction, and classification using six ML models.
-
+- `data_processing/`: Python scripts implementing subject-aware preprocessing, feature extraction, dimensionality reduction, and classification using six machine learning models.
 
 
 ## Methodology
 
-- Acquisition: Brite MKII (Artinis), bilateral motor cortex, finger-tapping task.
-- Preprocessing: time-series standardization, PCA (95% variance retained).
-- Machine Learning:
-  - **Time-series models**: direct use of 132-channel HbO features (per sample).
-  - **PCA-based models**: reduced to 35 components.
-  - **Statistical features**: 528 features per subject (mean, std, min, max), for comparison.
-- Evaluation: 5-fold and 10-fold **stratified cross-validation** with metrics including:
-  - Accuracy, Sensitivity, Specificity, PPV, NPV, and AUC-ROC.
+- **Acquisition**: Brite MKII (Artinis), bilateral motor cortex, finger-tapping task.
+- **Preprocessing**: standardization of HbO time-series signals; PCA where applicable.
+- **Feature Representation Strategies**:
+  1. **Time-Series**: full-resolution HbO signals from 132 features per sample.
+  2. **PCA-based**: reduced to 35 components retaining 95% of variance.
+  3. **Statistical Features**: 528 subject-level descriptors (mean, std, min, max).
+  4. **Hybrid**: time-series samples augmented with per-subject statistics.
+- **Validation**: strict **subject-aware cross-validation** using `StratifiedGroupKFold` (5-fold), avoiding data leakage.
+- **Metrics**: Accuracy, Sensitivity, Specificity, PPV, NPV, and AUC-ROC.
 
 ## Key Findings
 
-- Time-series models using **PCA** retained nearly perfect classification (up to 100% accuracy for KNN, MLP, RF, XGBoost).
-- **Flattened statistical features** resulted in significantly lower sensitivity (<30%), highlighting the critical role of temporal dynamics.
-- All scripts use standard Python libraries: `scikit-learn`, `xgboost`, `matplotlib`, `seaborn`, `numpy`, `pandas`.
+- The **hybrid representation** combining time-series and per-subject statistics achieved the most robust classification, with **SVM yielding AUC = 0.91**.
+- PCA-based models also showed strong performance, while **statistical-only models were limited** (sensitivity < 0.30).
+- Results emphasize the importance of preserving **temporal structure** and preventing **data leakage across subjects**.
+- All scripts rely on standard Python libraries: `scikit-learn`, `xgboost`, `matplotlib`, `seaborn`, `numpy`, `pandas`.
+
 
 ## Purpose
 
 This project aims to promote reproducibility and encourage further research into **non-invasive, portable neuroimaging** tools for the diagnosis and monitoring of long COVID. The results support the development of robust biomarkers using fNIRS and machine learning.
 
-## ⚙How to Use
+## How to Use
 
 1. **Clone the Repository**
    ```bash
@@ -57,11 +59,13 @@ Editar
 pip install -r requirements.txt
 Run Scripts
 
-6_global_timeseries_cv.py: full time-series classification
+1_subject_aware_cv.py: time-series classification using group-stratified cross-validation
 
-7_global_confusion_pca.py: PCA-reduced classification
+2_subject_aware_pca_cv.py: PCA-based dimensionality reduction and classification
 
-8_statistical_features_cv.py: statistical feature analysis
+3_statistical_features_cv.py: analysis based on statistical features per subject
+
+4_hybrid_features_cv.py: hybrid model combining time-series and statistical features
 
 Explore Results
 
