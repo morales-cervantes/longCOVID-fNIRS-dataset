@@ -26,7 +26,7 @@ import seaborn as sns
 
 # 1. Paths
 DATA_DIR = r"G:\Mi unidad\TecNM ITM\Artículo fNIRS\Database_all"
-OUTPUT_DIR = r"G:\Mi unidad\TecNM ITM\Artículo fNIRS\Results\8_statistical_features_cv"
+OUTPUT_DIR = r"G:\Mi unidad\TecNM ITM\Artículo fNIRS\Results\3_statistical_features_cv"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # 2. Bucle para procesar cada archivo y extraer estadísticas
@@ -175,4 +175,14 @@ plt.legend(loc='lower right'); plt.grid()
 plt.savefig(os.path.join(OUTPUT_DIR, 'roc_curves_stats_cv5.png'), dpi=300)
 plt.close()
 
-print(f"\nScript 8 execution complete. Full reports saved in: {OUTPUT_DIR}")
+# --- GUARDAR ROC DATA COMO PKL ---
+import pickle
+
+roc_output_path = os.path.join(OUTPUT_DIR, 'roc_data.pkl')
+with open(roc_output_path, 'wb') as f:
+    pickle.dump(all_roc_data, f)
+
+print(f"ROC curve data saved to: {roc_output_path}")
+
+
+print(f"\nScript 3 execution complete. Full reports saved in: {OUTPUT_DIR}")
