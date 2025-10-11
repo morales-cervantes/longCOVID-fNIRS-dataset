@@ -13,12 +13,14 @@
 **Edgar Guevara** [![ORCID](https://img.shields.io/badge/ORCID-0000--0002--2313--2810-green)](https://orcid.org/0000-0002-2313-2810)
 
 ---
-This repository contains the **expanded version** of the functional Near-Infrared Spectroscopy (fNIRS) dataset and the complete **Python scripts** used for analyzing the neural correlates of postCOVID-19. The dataset consists of **29,737 time-series samples from 37 participants** (9 postCOVID-19, 28 controls). We applied several machine learning algorithms with and without dimensionality reduction to evaluate their performance in classifying long COVID patients.
+This repository contains the **expanded version** of the functional Near-Infrared Spectroscopy (fNIRS) dataset and the complete **Python scripts** used for analyzing the neural correlates of postCOVID-19. The dataset consists of **29,737 time-series samples from 37 participants** (9 postCOVID-19, 28 controls). We applied several machine learning algorithms with and without dimensionality reduction to evaluate their performance in classifying long COVID patients.  
+In addition, the repository includes **feature-level interpretability analyses** based on subject-level statistical summaries (mean, standard deviation, minimum, and maximum per fNIRS channel and hemoglobin signal), performed through both **Random Forest feature importance** and **PCA loading inspection** to identify the most informative patterns distinguishing post-COVID and control groups.
+
 
 ## Contents
 
 - `Long_COVID_fNIRS_Raw_Data/`: Raw fNIRS recordings (.tsv) from 37 participants (9 post-COVID, 28 controls).
-- `data_processing/`: Python scripts implementing subject-aware preprocessing, feature extraction, dimensionality reduction, and classification using six machine learning models.
+- `data_processing/`: Python scripts implementing subject-aware preprocessing, feature extraction, dimensionality reduction, classification using six machine learning models, and feature-level interpretability analyses.
 
 
 ## Methodology
@@ -32,6 +34,10 @@ This repository contains the **expanded version** of the functional Near-Infrare
   4. **Hybrid**: time-series samples augmented with per-subject statistics.
 - **Validation**: strict **subject-aware cross-validation** using `StratifiedGroupKFold` (5-fold), avoiding data leakage.
 - **Metrics**: Accuracy, Sensitivity, Specificity, PPV, NPV, and AUC-ROC.
+- **Feature-Level Interpretation**: conducted on subject-level summaries using two complementary approaches:
+  - **Random Forest feature importance** (supervised, 1,000 trees) to identify the most informative HbO/HbR/HbT descriptors under stratified subject-level cross-validation.
+  - **PCA loadings** (unsupervised) weighted by explained variance ratio (95% retained) to reveal key signal components contributing to group discrimination.
+
 
 ## Key Findings
 
@@ -39,6 +45,8 @@ This repository contains the **expanded version** of the functional Near-Infrare
 - PCA-based models also showed strong performance, while **statistical-only models were limited** (sensitivity < 0.30).
 - Results emphasize the importance of preserving **temporal structure** and preventing **data leakage across subjects**.
 - All scripts rely on standard Python libraries: `scikit-learn`, `xgboost`, `matplotlib`, `seaborn`, `numpy`, `pandas`.
+- **Feature-level analyses (Random Forest and PCA)** revealed a consistent physiological signature dominated by extrema and variability of **HbR/HbT**, with supportive mean **HbO** descriptors, providing interpretable evidence of neural differences between post-COVID and control participants.
+
 
 
 ## Purpose
@@ -51,32 +59,28 @@ This project aims to promote reproducibility and encourage further research into
    ```bash
    git clone https://github.com/usuario/longCOVID-fNIRS-dataset.git
    cd longCOVID-fNIRS-dataset
-Install Python Dependencies
+   ```
 
-bash
-Copiar
-Editar
-pip install -r requirements.txt
-Run Scripts
+2. **Install Python Dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-1_subject_aware_cv.py: time-series classification using group-stratified cross-validation
+3. **Run Scripts**
+   - `1_subject_aware_cv.py`: time-series classification using group-stratified cross-validation  
+   - `2_subject_aware_pca_cv.py`: PCA-based dimensionality reduction and classification  
+   - `3_statistical_features_cv.py`: analysis based on statistical features per subject  
+   - `4_hybrid_features_cv.py`: hybrid model combining time-series and statistical features  
+   - `5_feature_importance_RF.py`: supervised feature-level interpretability using Random Forest feature importance under subject-level cross-validation  
+   - `6_pca_loadings_analysis.py`: unsupervised feature-level interpretability through PCA loadings weighted by explained variance ratio  
 
-2_subject_aware_pca_cv.py: PCA-based dimensionality reduction and classification
+4. **Explore Results**
+   - Performance metrics are stored in the `results/` folder.  
+   - Visualizations include ROC curves, confusion matrices, and boxplots.  
+   - Feature-level interpretability outputs include ranked feature lists, barplots, and contribution tables for Random Forest and PCA analyses.
 
-3_statistical_features_cv.py: analysis based on statistical features per subject
-
-4_hybrid_features_cv.py: hybrid model combining time-series and statistical features
-
-Explore Results
-
-Performance metrics in results/
-
-Figures: ROC curves, confusion matrices, boxplots
-
-📊 Dataset Summary
+Dataset Summary
 Participants: 37 (9 post-COVID, 28 control)
-
-
 
 Ethics Statement
 The study was approved by the State Research Ethics Committee in Health of San Luis Potosí, Mexico (SLP/08-2020). All participants provided informed consent in accordance with the Declaration of Helsinki.
